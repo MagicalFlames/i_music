@@ -1,0 +1,45 @@
+# Frontend (Node.js/React)
+node_modules/
+dist/
+.env
+.env.local
+*.log
+.DS_Store
+
+# Backend (Java/Maven)
+target/
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# IDE - IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# IDE - Eclipse/STS
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+# IDE - NetBeans
+/nbproject/private/
+/nbbuild/
+/nbdist/
+/.nb-gradle/
+
+# IDE - VS Code
+.vscode/
+
+# Build
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# Other
+HELP.md
+.claude/

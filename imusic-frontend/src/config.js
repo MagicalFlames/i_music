@@ -1,0 +1,13 @@
+// API 基础 URL 配置
+export const BASE_URL = "http://localhost:8080"
+
+// 第三方登录配置
+export const OAUTH_CONFIG = {
+  codeforces: {
+    clientId: 'WWK4HIA8tkZ74gcSa588SwZkucawqlFQ',
+    redirectUri: 'https://imusic.myweb2025.xyz/redirect.html',
+    authorizeUrl: 'https://codeforces.com/oauth/authorize',
+    scope: 'openid'
+  }
+}
+
