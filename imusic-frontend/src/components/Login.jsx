@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { BASE_URL, OAUTH_CONFIG } from '../config'
+import { BASE_URL } from '../config'
 import LoadingOverlay from './LoadingOverlay'
 import { showToast } from './Toast'
 import './Login.css'
@@ -9,7 +9,6 @@ function Login({ onClose, onLoginSuccess }) {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
-  const [cfAuthenticated, setCfAuthenticated] = useState(false) // 标记是否已通过 CF 认证
   const [isLoading, setIsLoading] = useState(false)
 
   // 账号密码登录
@@ -49,13 +48,21 @@ function Login({ onClose, onLoginSuccess }) {
     }
   }
 
-  // 注册（仅在 CF 认证后可用）
+  // 注册
   const handleRegister = async (e) => {
     e.preventDefault()
     setError('')
 
-    if (!cfAuthenticated) {
-      setError('请先通过 CodeForces 认证')
+    if (!username.trim()) {
+      setError('请输入用户名')
+      return
+    }
+    if (!password.trim()) {
+      setError('请输入密码')
+      return
+    }
+    if (password.length < 4) {
+      setError('密码长度至少4位')
       return
     }
 
@@ -103,11 +110,10 @@ function Login({ onClose, onLoginSuccess }) {
             }
           }
         } catch (err) {
-          console.error('创建歌单失败:', err)
+          console.error('自动登录失败:', err)
         }
 
         // 4. 注册成功，切换到登录页面让用户手动登录
-        setCfAuthenticated(false)
         setMode('login')
         setUsername('')
         setPassword('')
@@ -124,53 +130,12 @@ function Login({ onClose, onLoginSuccess }) {
     }
   }
 
-  // 第三方认证 - CodeForces
-  const handleCodeforcesLogin = () => {
-    const { clientId, redirectUri, authorizeUrl, scope } = OAUTH_CONFIG.codeforces
-    const url = `${authorizeUrl}?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}`
-
-    window.open(url, 'OAuth Login', 'width=600,height=700')
-
-    // 监听来自 OAuth 回调的消息
-    const messageHandler = async (event) => {
-      if (event.data.type === 'auth_code') {
-        const code = event.data.code
-        setIsLoading(true)
-
-        try {
-          const response = await fetch(`${BASE_URL}/api/user/certificate/codeforces/?code=${encodeURIComponent(code)}`, {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            credentials: 'include'
-          })
-
-          const data = await response.json()
-
-          if (data.success) {
-            // CodeForces 认证成功，跳转到注册页面让用户创建账号
-            setCfAuthenticated(true)
-            setMode('register')
-            setUsername('')
-            setPassword('')
-            setError('')
-          } else {
-            setError(data.message?.error || 'CodeForces 认证失败')
-          }
-        } catch (err) {
-          console.error('CodeForces 认证错误:', err)
-          setError('网络错误，请稍后重试')
-        } finally {
-          setIsLoading(false)
-        }
-
-        // 移除事件监听
-        window.removeEventListener('message', messageHandler)
-      }
-    }
-
-    window.addEventListener('message', messageHandler)
+  // 切换登录/注册模式
+  const switchMode = () => {
+    setMode(mode === 'login' ? 'register' : 'login')
+    setError('')
+    setUsername('')
+    setPassword('')
   }
 
   return (
@@ -182,12 +147,12 @@ function Login({ onClose, onLoginSuccess }) {
 
         <div className="login-content">
           <h2 className="login-title">
-            {mode === 'login' ? '登录' : '创建账号'}
+            {mode === 'login' ? '登录' : '注册'}
           </h2>
           <p className="login-desc">
             {mode === 'login'
               ? '请输入用户名和密码登录'
-              : '通过 CodeForces 认证成功！请设置您的用户名和密码'}
+              : '创建一个新账号'}
           </p>
 
           <form className="login-form" onSubmit={mode === 'login' ? handlePasswordLogin : handleRegister}>
@@ -220,38 +185,27 @@ function Login({ onClose, onLoginSuccess }) {
             {error && <div className="login-error">{error}</div>}
 
             <button type="submit" className="login-submit">
-              {mode === 'login' ? '登录' : '创建账号'} →
+              {mode === 'login' ? '登录' : '注册'}
             </button>
           </form>
 
-          {mode === 'login' && (
-            <>
-              <div className="login-divider">
-                <span>没有账号？使用 CodeForces 认证来注册账号</span>
-              </div>
-
-              <div className="login-third-party">
-                <button className="third-party-btn codeforces-btn" onClick={handleCodeforcesLogin}>
-                  <img
-                    src="/codeforces.png"
-                    alt="CodeForces"
-                    className="codeforces-logo"
-                  />
-                  <span>CodeForces 认证</span>
+          <div className="login-footer">
+            {mode === 'login' ? (
+              <>
+                还没有账号？
+                <button className="login-switch" onClick={switchMode}>
+                  立即注册
                 </button>
-              </div>
-
-              <div className="login-hint">
-                💡 首次使用？请先通过 CodeForces 认证创建账号
-              </div>
-            </>
-          )}
-
-          {mode === 'register' && (
-            <div className="register-notice">
-              ✅ 已通过 CodeForces 认证
-            </div>
-          )}
+              </>
+            ) : (
+              <>
+                已有账号？
+                <button className="login-switch" onClick={switchMode}>
+                  去登录
+                </button>
+              </>
+            )}
+          </div>
         </div>
       </div>
     </>

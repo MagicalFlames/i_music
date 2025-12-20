@@ -4,26 +4,27 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(4px);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 9999;
-  animation: fadeIn 0.12s ease-out;
+  animation: fadeIn 0.2s ease-out;
 }
 
 .loading-content {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
+  gap: 24px;
 }
 
 .loading-spinner {
   position: relative;
-  width: 120px;
-  height: 120px;
+  width: 80px;
+  height: 80px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -35,35 +36,34 @@
   height: 100%;
   border-radius: 50%;
   border: 3px solid transparent;
-  border-top-color: #667eea;
-  animation: spin 1.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+  border-top-color: var(--primary);
+  animation: spin 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
 }
 
 .spinner-ring:nth-child(2) {
-  width: 80%;
-  height: 80%;
-  border-top-color: #764ba2;
-  animation-duration: 1.2s;
-  animation-direction: reverse;
+  width: 70%;
+  height: 70%;
+  border-top-color: var(--accent);
+  animation-delay: -0.15s;
 }
 
 .spinner-ring:nth-child(3) {
-  width: 60%;
-  height: 60%;
-  border-top-color: #f093fb;
-  animation-duration: 0.9s;
+  width: 40%;
+  height: 40%;
+  border-top-color: var(--primary-light);
+  animation-delay: -0.3s;
 }
 
 .music-icon {
-  font-size: 32px;
-  animation: bounce 0.8s ease-in-out infinite;
+  font-size: 24px;
+  color: var(--primary);
+  animation: bounce 1s ease-in-out infinite;
 }
 
 .loading-text {
-  color: white;
-  font-size: 18px;
-  font-weight: 600;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  color: var(--text-primary);
+  font-size: 15px;
+  font-weight: 500;
   animation: pulse 1.5s ease-in-out infinite;
 }
 
@@ -81,7 +81,7 @@
     transform: translateY(0) scale(1);
   }
   50% {
-    transform: translateY(-10px) scale(1.1);
+    transform: translateY(-8px) scale(1.1);
   }
 }
 
@@ -90,18 +90,16 @@
     opacity: 1;
   }
   50% {
-    opacity: 0.6;
+    opacity: 0.5;
   }
 }
 
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: scale(0.95);
   }
   to {
     opacity: 1;
-    transform: scale(1);
   }
 }
 

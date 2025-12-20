@@ -5,5 +5,5 @@ import xyz.mywebs.imusic.Entity.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
     User findByUsername(String username);
-    User findByPlatformAndThirdPartID(String platform,String thirdPartID);
+    boolean existsByUsername(String username);
 }

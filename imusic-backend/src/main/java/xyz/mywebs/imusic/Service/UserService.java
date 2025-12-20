@@ -20,13 +20,8 @@ public class UserService {
     public User findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
-    public User findByPlatformAndThirdPartID(String platform,String thirdpartID){
-        return userRepository.findByPlatformAndThirdPartID(platform,thirdpartID);
-    }
-    public void deleteUserByPlatformAndThirdPartID(String platform,String thirdpartID) {
-        User user=findByPlatformAndThirdPartID(platform, thirdpartID);
-        if(user!=null){
-            userRepository.delete(user);
-        }
+
+    public boolean existsByUsername(String username) {
+        return userRepository.existsByUsername(username);
     }
 }

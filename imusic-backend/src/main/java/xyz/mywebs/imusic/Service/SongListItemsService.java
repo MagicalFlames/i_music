@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 public class SongListItemsService {
 
     private final SongListItemsRepository songListItemsRepository;
-    private final SongService songService;  // 注入 SongService
+    private final SongService songService;
 
     @Autowired
     public SongListItemsService(SongListItemsRepository songListItemsRepository, SongService songService) {
@@ -23,19 +23,15 @@ public class SongListItemsService {
     }
 
     public List<SongResponse> findByUsernameAndListName(String username, String listName) {
-        // 查询 SongListItems 列表
         List<SongListItems> songListItemsList = songListItemsRepository.findByUsernameAndListName(username, listName);
 
-        // 将 SongListItems 列表转换为 SongResponse 列表
         return songListItemsList.stream()
                 .map(songListItem -> {
-                    // 根据 songListItem.getTitle() 查询歌曲详细信息
                     Song song = songService.findByAlbumArtistAndAlbumAndTitle(
                             songListItem.getAlbumArtist(),
                             songListItem.getAlbum(),
                             songListItem.getTitle()
                     );
-                    // 返回 SongResponse，封装 Song 信息
                     return new SongResponse(
                             song.getFilePath(),
                             song.getCoverFilePath(),
@@ -50,23 +46,23 @@ public class SongListItemsService {
                             song.getDuration()
                     );
                 })
-                .collect(Collectors.toList());  // 收集为 List<SongResponse>
+                .collect(Collectors.toList());
     }
 
-    public void addSongToList(String title,String albumArtist,String album,String username,String listName) {
-
-        SongListItems songListItem = new SongListItems(
-                title,
-                albumArtist,
-                album,
-                username,
-                listName
-        );
-        songListItemsRepository.save(songListItem);
+    public void addSongToList(String title, String albumArtist, String album, String username, String listName) {
+        // 检查是否已存在，避免重复添加
+        if (!songListItemsRepository.existsByTitleAndAlbumArtistAndAlbumAndUsernameAndListName(
+                title, albumArtist, album, username, listName)) {
+            SongListItems songListItem = new SongListItems(title, albumArtist, album, username, listName);
+            songListItemsRepository.save(songListItem);
+        }
     }
 
-    public void deleteSongFromList(String title,String albumArtist,String album,String username,String listName) {
-        SongListItems songListItem=songListItemsRepository.findByTitleAndAlbumArtistAndAlbumAndUsernameAndListName(title,albumArtist,album,username,listName);
-        songListItemsRepository.delete(songListItem);
+    public void deleteSongFromList(String title, String albumArtist, String album, String username, String listName) {
+        List<SongListItems> items = songListItemsRepository.findByTitleAndAlbumArtistAndAlbumAndUsernameAndListName(
+                title, albumArtist, album, username, listName);
+        if (!items.isEmpty()) {
+            songListItemsRepository.deleteAll(items);
+        }
     }
 }

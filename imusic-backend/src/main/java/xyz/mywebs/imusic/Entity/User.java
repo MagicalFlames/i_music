@@ -10,25 +10,17 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String username;
 
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
-    private String platform;
-
-    @Column(nullable = false)
-    private String thirdPartID;
-
     public User() {}
 
-    public User(String username, String password ,String platform ,String thirdPartID) {
+    public User(String username, String password) {
         this.username = username;
         this.password = password;
-        this.platform = platform;
-        this.thirdPartID=thirdPartID;
     }
 
     public Long getId() {
@@ -53,21 +45,5 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getPlatform(){
-        return platform;
-    }
-
-    public void setPlatform(String platform){
-        this.platform=platform;
-    }
-
-    public String getThirdPartID(){
-        return thirdPartID;
-    }
-
-    public void setThirdPartID(String thirdPartID){
-        this.thirdPartID=thirdPartID;
     }
 }

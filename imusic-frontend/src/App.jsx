@@ -421,6 +421,7 @@ function App() {
               favorites={favorites}
               onPlay={playSong}
               onAddToFavorites={addToFavorites}
+              onRemoveFromFavorites={removeFromFavorites}
               currentSong={currentSong}
             />
           </div>

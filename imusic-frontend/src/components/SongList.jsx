@@ -1,14 +1,22 @@
 import './SongList.css'
 
-function SongList({ songs, favorites, onPlay, onAddToFavorites, currentSong }) {
+function SongList({ songs, favorites, onPlay, onAddToFavorites, onRemoveFromFavorites, currentSong }) {
   const formatDuration = (seconds) => {
     const mins = Math.floor(seconds / 60)
     const secs = seconds % 60
     return `${mins}:${secs.toString().padStart(2, '0')}`
   }
 
-  const isFavorite = (songId) => {
-    return favorites.some(fav => fav.id === songId)
+  const isFavorite = (song) => {
+    return favorites.some(fav => fav.title === song.title && fav.artist === song.artist)
+  }
+
+  const handleFavoriteClick = (song) => {
+    if (isFavorite(song)) {
+      onRemoveFromFavorites(song)
+    } else {
+      onAddToFavorites(song)
+    }
   }
 
   if (songs.length === 0) {
@@ -55,11 +63,10 @@ function SongList({ songs, favorites, onPlay, onAddToFavorites, currentSong }) {
               <div className="song-footer">
                 <span className="song-duration">{formatDuration(song.duration)}</span>
                 <button
-                  className={`favorite-btn ${isFavorite(song.id) ? 'favorited' : ''}`}
-                  onClick={() => onAddToFavorites(song)}
-                  disabled={isFavorite(song.id)}
+                  className={`favorite-btn ${isFavorite(song) ? 'favorited' : ''}`}
+                  onClick={() => handleFavoriteClick(song)}
                 >
-                  {isFavorite(song.id) ? '❤️' : '🤍'}
+                  {isFavorite(song) ? '❤️' : '🤍'}
                 </button>
               </div>
             </div>

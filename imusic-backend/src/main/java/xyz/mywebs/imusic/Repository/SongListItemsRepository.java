@@ -7,6 +7,8 @@ import java.util.List;
 
 public interface SongListItemsRepository extends JpaRepository<SongListItems, Long> {
     List<SongListItems> findByUsernameAndListName(String username, String listName);
-    SongListItems findByTitleAndAlbumArtistAndAlbumAndUsernameAndListName(
-            String title, String albumArtist,String album,String username,String listName);
+    List<SongListItems> findByTitleAndAlbumArtistAndAlbumAndUsernameAndListName(
+            String title, String albumArtist, String album, String username, String listName);
+    boolean existsByTitleAndAlbumArtistAndAlbumAndUsernameAndListName(
+            String title, String albumArtist, String album, String username, String listName);
 }
