@@ -18,6 +18,7 @@ public class WebConfig {
                             "https://myweb2025.xyz",
                             "https://www.myweb2025.xyz",
                             "https://imusic.myweb2025.xyz",
+                            "https://test.myweb2025.xyz",
                             "https://*.vercel.app",
                             "http://localhost:*"
                         )
