@@ -95,7 +95,7 @@ function Player({
           <img
             src={currentSong.cover}
             alt={currentSong.title}
-            className="player-cover"
+            className={`player-cover ${isPlaying ? 'playing' : ''}`}
             onError={(e) => {
               console.error('播放器封面加载失败:', currentSong.cover)
               e.target.src = 'https://via.placeholder.com/100x100/667eea/ffffff?text=No+Cover'

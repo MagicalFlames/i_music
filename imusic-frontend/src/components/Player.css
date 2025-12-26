@@ -160,6 +160,8 @@
   background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
   color: white;
   box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+  line-height: 1;
+  text-indent: 2px;
 }
 
 .control-btn-play:hover {
