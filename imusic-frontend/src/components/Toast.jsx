@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import './Toast.css'
 
-let toastQueue = []
 let toastCallback = null
+let toastCounter = 0
 
 export const showToast = (message, type = 'info') => {
   if (toastCallback) {
@@ -15,7 +15,7 @@ const Toast = () => {
 
   useEffect(() => {
     toastCallback = (message, type) => {
-      const id = Date.now()
+      const id = `${Date.now()}-${++toastCounter}`
       const newToast = { id, message, type }
 
       setToasts(prev => [...prev, newToast])

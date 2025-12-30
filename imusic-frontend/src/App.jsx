@@ -68,6 +68,11 @@ function App() {
     restoreLogin()
   }, [])
 
+  // 页面加载时获取所有歌曲
+  useEffect(() => {
+    handleSearch('')
+  }, [])
+
   // 获取收藏列表
   const fetchFavorites = async () => {
     if (!user) return
@@ -78,6 +83,8 @@ function App() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'X-Username': localStorage.getItem('username') || '',
+          'X-Password': localStorage.getItem('password') || ''
         },
         body: JSON.stringify({ listName: 'favorite' }),
         credentials: 'include'
@@ -214,6 +221,8 @@ function App() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'X-Username': localStorage.getItem('username') || '',
+          'X-Password': localStorage.getItem('password') || ''
         },
         body: JSON.stringify({
           title: song.title,
@@ -254,6 +263,8 @@ function App() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'X-Username': localStorage.getItem('username') || '',
+          'X-Password': localStorage.getItem('password') || ''
         },
         body: JSON.stringify({
           title: song.title,

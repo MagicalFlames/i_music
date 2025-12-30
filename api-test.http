@@ -1,0 +1,188 @@
+### iMusic API Test File
+@baseUrl = http://localhost:8080
+@username = test1
+@password = 123456
+
+
+### ==================== User Service ====================
+
+### 用户注册
+POST {{baseUrl}}/api/user/register
+Content-Type: application/json
+
+{
+  "username": "newuser",
+  "password": "123456"
+}
+
+### 用户登录
+POST {{baseUrl}}/api/user/login/password
+Content-Type: application/json
+
+{
+  "username": "{{username}}",
+  "password": "{{password}}"
+}
+
+### 验证用户（内部服务调用）
+GET {{baseUrl}}/api/user/validate?username={{username}}&password={{password}}
+
+
+### ==================== Music Service ====================
+
+### 搜索所有歌曲（空关键词返回全部）
+POST {{baseUrl}}/api/song/search/all
+Content-Type: application/json
+
+{
+  "title": ""
+}
+
+### 按标题搜索歌曲
+POST {{baseUrl}}/api/song/search/all
+Content-Type: application/json
+
+{
+  "title": "周杰伦"
+}
+
+### 按艺术家搜索歌曲
+POST {{baseUrl}}/api/song/search/all
+Content-Type: application/json
+
+{
+  "albumArtist": "Taylor Swift"
+}
+
+### 播放歌曲（获取播放信息）
+POST {{baseUrl}}/api/song/play
+Content-Type: application/json
+
+{
+  "title": "晴天",
+  "albumArtist": "周杰伦",
+  "album": "叶惠美"
+}
+
+### 获取歌曲详情
+GET {{baseUrl}}/api/song/get?title=晴天&albumArtist=周杰伦&album=叶惠美
+
+
+### ==================== Playlist Service ====================
+
+### 获取用户歌单列表
+POST {{baseUrl}}/api/user/songLists/show
+Content-Type: application/json
+X-Username: {{username}}
+X-Password: {{password}}
+
+{}
+
+### 创建新歌单
+POST {{baseUrl}}/api/user/songLists/add
+Content-Type: application/json
+X-Username: {{username}}
+X-Password: {{password}}
+
+{
+  "listName": "my-playlist"
+}
+
+### 查询收藏歌曲
+POST {{baseUrl}}/api/song/search/insonglist
+Content-Type: application/json
+X-Username: {{username}}
+X-Password: {{password}}
+
+{
+  "listName": "favorite"
+}
+
+### 添加歌曲到收藏
+POST {{baseUrl}}/api/song/add/tosonglist
+Content-Type: application/json
+X-Username: {{username}}
+X-Password: {{password}}
+
+{
+  "title": "晴天",
+  "albumArtist": "周杰伦",
+  "album": "叶惠美",
+  "listName": "favorite"
+}
+
+### 从收藏删除歌曲
+POST {{baseUrl}}/api/song/delete/fromsonglist
+Content-Type: application/json
+X-Username: {{username}}
+X-Password: {{password}}
+
+{
+  "title": "晴天",
+  "albumArtist": "周杰伦",
+  "album": "叶惠美",
+  "listName": "favorite"
+}
+
+
+### ==================== Static Resources ====================
+
+### 获取封面图片（示例）
+GET {{baseUrl}}/cover/default.jpg
+
+### 获取音频文件（示例）
+GET {{baseUrl}}/mp3/sample.mp3
+
+
+### ==================== Error Cases ====================
+
+### 登录 - 用户不存在
+POST {{baseUrl}}/api/user/login/password
+Content-Type: application/json
+
+{
+  "username": "nonexistent",
+  "password": "123456"
+}
+
+### 登录 - 密码错误
+POST {{baseUrl}}/api/user/login/password
+Content-Type: application/json
+
+{
+  "username": "{{username}}",
+  "password": "wrongpassword"
+}
+
+### 注册 - 用户名已存在
+POST {{baseUrl}}/api/user/register
+Content-Type: application/json
+
+{
+  "username": "{{username}}",
+  "password": "123456"
+}
+
+### 收藏 - 未登录（缺少认证头）
+POST {{baseUrl}}/api/song/add/tosonglist
+Content-Type: application/json
+
+{
+  "title": "晴天",
+  "albumArtist": "周杰伦",
+  "album": "叶惠美",
+  "listName": "favorite"
+}
+
+### 收藏 - 认证失败（错误密码）
+POST {{baseUrl}}/api/song/add/tosonglist
+Content-Type: application/json
+X-Username: {{username}}
+X-Password: wrongpassword
+
+{
+  "title": "晴天",
+  "albumArtist": "周杰伦",
+  "album": "叶惠美",
+  "listName": "favorite"
+}
