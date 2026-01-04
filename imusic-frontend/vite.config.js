@@ -6,7 +6,7 @@ export default defineConfig({
   server: {
     port: 3000,
     open: true,
-    allowedHosts: ['test.myweb2025.xyz'],
+    allowedHosts: ['test.myweb2025.xyz', 'api.myweb2025.xyz'],
     proxy: {
       '/api': {
         target: 'http://localhost:8080',
